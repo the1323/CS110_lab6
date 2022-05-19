@@ -234,4 +234,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# logins to mongoDB
+config/
 # End of https://www.gitignore.io/api/windows
