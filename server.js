@@ -41,9 +41,19 @@ mongoose.connect(db, (err) => {
 // TODO: Add server side code
 
 // Create controller handlers to handle requests at each endpoint
-app.get("/", homeHandler.getHome);
-app.get("/:roomName", roomHandler.getRoom);
 
+app.post("/create", function (req, res) {
+  const newRoom = new Room({
+    name: req.body.roomName,
+    id: roomIdGenerator.roomIdGenerator(),
+  });
+  newRoom
+    .save()
+    .then(console.log("new room created"))
+    .catch((err) => console.log("error at create new room"));
+});
+
+//get json of all rooms from db
 app.get("/getRoom", function (req, res) {
   Room.find()
     .lean()
@@ -51,6 +61,10 @@ app.get("/getRoom", function (req, res) {
       res.json(item);
     });
 });
+
+app.get("/", homeHandler.getHome);
+app.get("/:roomName", roomHandler.getRoom);
+
 // NOTE: This is the sample server.js code we provided, feel free to change the structures
 
 app.listen(port, () =>
