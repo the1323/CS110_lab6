@@ -1,12 +1,20 @@
 // Controller handler to handle functionality in home page
 
 // Example for handle a get request at '/' endpoint.
-
-function getHome(request, response){
+const Room = require("../models/Rooms");
+function getHome(request, response) {
   // do any work you need to do, then
-  response.render('home', {title: 'home'});
+  Room.find()
+    .lean()
+    .then((items) => {
+      response.render("home", {
+        title: "home",
+        rooms: items,
+        isAvailable: true,
+      });
+    });
 }
 
 module.exports = {
-    getHome
+  getHome,
 };

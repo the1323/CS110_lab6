@@ -9,9 +9,9 @@ const Room = require("./models/Rooms");
 // import handlers
 const homeHandler = require("./controllers/home.js");
 const roomHandler = require("./controllers/room.js");
-
+const roomIdGenerator = require("./util/roomIdGenerator");
 const app = express();
-const port = 8080;
+const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
