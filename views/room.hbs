@@ -1,6 +1,42 @@
+
 <h1> Room </h1>
 <p>This is a demo of chatroom page</p>
 <p>
-    The room you are visiting is {{ roomName }}
+  The room you are visiting is {{roomId}}
 </p>
-<p>To generate a new room, here is the room id: {{ newRoomId }}</p>
+<p  id="link_1" >To generate a new room, here is the room id:</p>
+<ul id="list-template">
+  {{#each rooms}}
+    <li> <p>rooms: </p><a href={{this.id}}> {{this.name}} </a></li>
+  {{/each}}
+</ul>
+
+<form action="/createMessage" method="POST">
+  <input type="text" name="roomName" placeholder="enter room name" />
+  <input type="submit" value="create room" />
+</form>
+
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
+<script>
+    
+  window.addEventListener('load', function () {
+  fetch('http://localhost:3000/roomMessage?' + new URLSearchParams({ 
+      roomID:"628a952ecb872044a181f00d", 
+   
+   }))
+   var link1 = "http://stackoveflow.com/"; 
+   let myRoomId = "{{roomId}}"
+   let rooms = {{{json rooms}}}
+   let myRoomName = "";
+   let myRoomObjId = "";
+   for (let i =0 ;i< rooms.length;i++){
+       if (rooms[i].id = myRoomId){
+           myRoomObjId = rooms[i]._id
+           myRoomName = rooms[i].name
+       }
+   }
+   document.getElementById("link_1").innerHTML =myRoomObjId;
+   //document.getElementById("link_1").innerHTML = rooms[0].id;
+  });
+
+</script>
