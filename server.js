@@ -67,8 +67,8 @@ app.post("/create", async (req, res) => {
 
 app.post("/createMessage", async (req, res) => {
   const newMessage = new message({
-    userName: "tong",
-    message: "hellowworld(),",
+    userName: req.body.roomName,
+    message: req.body.message,
   });
   const result = await newMessage.save();
   console.log("hereh");
@@ -91,8 +91,14 @@ app.get("/roomMessage", async (req, res) => {
     "message"
     //"userName message
   );
-  console.log("here1h");
-  res.json(findRoom.message[0].message);
+  if (findRoom != undefined){
+    console.log("here1h");
+    res.json(findRoom.message);
+    //console.log(findRoom.message)
+    
+  }
+  else console.log("empty");
+  
 
   // newRoom
   //   .save()
