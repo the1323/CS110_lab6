@@ -1,41 +1,56 @@
 
 <h1> Room </h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <p>This is a demo of chatroom page</p>
-<p>
-  The room you are visiting is {{roomId}}
+<p id = "welcome">Welcome </p>
+<p id="room-name">
+  The room you are visiting is
 </p>
-<p  id="link_1" >To generate a new room, here is the room id:</p>
-<ul id="list-template">
-    {{#each rooms}}
-         <li> <a href={{this.id}}> {{this.name}}  </a></li>
-    {{/each}}
-</ul>
+<p id="room-id">
+  The room ID is 
+</p>
 
-<form action="/createMessage" method="POST">
-  <input type="text" name="roomName" placeholder="enter name" />
-  <input type="text" name="message" placeholder="enter message" />
-  <input type="hidden" id = "myRoomObjId" name="foo" value="bar" />
-  <input type="submit" value="create room" />
-</form>
+<div class="card" style="width: 18rem;">
+  <ul id="list-template" class="list-group list-group-flush">
+    <li class="list-group-item">Loading messages...</li>
+
+  </ul>
+</div>
+<div>
+  <input id = "message-field" type="text" name="message" placeholder="enter message" />
+  <button onclick="myFunction()">Send Message</button>
+</div>
 
 <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 <script>
-    
+  let person="";
+  let myRoomObjId = "";
+  let singleTimeToggle = true;
   window.addEventListener('load', function () {
+  let text;
+  person = prompt("Please enter your name:", "");
+  if (person == null || person == "") {
+    text = "User cancelled the prompt.";
+  } else {
+    text = "Hello " + person + ". Welcome to the chat room!!";
+  }
+  document.getElementById("welcome").innerHTML = text;
+
+
   setInterval(async function(){
-   var link1 = "http://stackoveflow.com/"; 
+   
    let myRoomId = "{{roomId}}"
    let rooms = {{{json rooms}}}
    let myRoomName = "";
-   let myRoomObjId = "";
+   
    for (let i =0 ;i< rooms.length;i++){
        if (rooms[i].id === myRoomId){
            myRoomObjId = rooms[i]._id
            myRoomName = rooms[i].name
        }
    }
-   document.getElementById("myRoomObjId").innerHTML =myRoomObjId;
-   document.getElementById("link_1").innerHTML =myRoomName;
+   
+   
    //document.getElementById("link_1").innerHTML = rooms[0].id;
     //"628a952ecb872044a181f00d"
 
@@ -56,22 +71,46 @@
                     for(var j = 0; j < roomsJson.length; ++j) {
                         var li = document.createElement('li');
                         const para = document.createElement("p");
+                        var name = document.createElement('b');
+                        name.innerHTML = roomsJson[j].userName+"@" + roomsJson[j].datetime + ":";
                         para.innerHTML = roomsJson[j].message;
-                        var a = document.createElement('a');
-                        a.setAttribute('href', roomsJson[j].message)
+                        li.appendChild(name);
                         li.appendChild(para);
+                        li.className = "list-group-item";
+                        
                         document.getElementById('list-template').appendChild(li)
-                        a.innerHTML = a.innerHTML + roomsJson[j].message
+                        
                     }
 
                 })
                 .catch(err => {
                     console.log("ERROR" + err)
                 });
-
+  if (singleTimeToggle){
+    document.getElementById('room-name').innerHTML+=myRoomName;
+    document.getElementById('room-id').innerHTML+=myRoomId;
+    singleTimeToggle = false;
+  }
    
 
-   }, 5000);
-  });
+   }, 1000);
 
+  });
+  async function myFunction(){
+  let userName = person;
+  let message =document.getElementById("message-field").value
+  document.getElementById("message-field").value='';
+  let body = {
+    userName:userName,
+    message: message ,
+    id:myRoomObjId,
+  };
+  const response = await fetch('/createMessage', {
+	method: 'post',
+	body: JSON.stringify(body),
+	headers: {'Content-Type': 'application/json'}
+});
+  
+  }  
+  
 </script>

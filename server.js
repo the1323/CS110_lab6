@@ -66,16 +66,19 @@ app.post("/create", async (req, res) => {
 });
 
 app.post("/createMessage", async (req, res) => {
+  var current = new Date();
   const newMessage = new message({
-    userName: req.body.roomName,
+    userName: req.body.userName,
     message: req.body.message,
+    datetime:current.toLocaleString(),
   });
+  console.log(req.body.userName);
   const result = await newMessage.save();
-  console.log("hereh");
-  const findRoom = await Room.findByIdAndUpdate("628a952ecb872044a181f00d", {
+  console.log("chereh");
+  const findRoom = await Room.findByIdAndUpdate(req.body.id, {
     $push: { message: result._id },
   });
-  console.log("here1h");
+  console.log("chere1h");
   //res.json(result._id);
 
   // newRoom
@@ -86,13 +89,14 @@ app.post("/createMessage", async (req, res) => {
 
 app.get("/roomMessage", async (req, res) => {
   roomID = req.query.roomID;
-  console.log(req.query.roomID);
+  if (roomID === "") return
+  //console.log(req.query.roomID);
   const findRoom = await Room.findById(roomID).populate(
     "message"
     //"userName message
   );
   if (findRoom != undefined){
-    console.log("here1h");
+    //console.log("here1h");
     res.json(findRoom.message);
     //console.log(findRoom.message)
     

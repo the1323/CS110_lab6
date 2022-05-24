@@ -10,5 +10,10 @@ const MessageSchema = new Schema({
     type: String,
     required: true,
   },
+  datetime : {
+    type: String,
+    required: true,
+  },
+
 });
 module.exports = Item = mongoose.model("messages", MessageSchema);
